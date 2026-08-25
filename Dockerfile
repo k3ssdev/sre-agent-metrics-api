@@ -1,7 +1,7 @@
 # ==========================================
 # Etapa 1: Builder
 # ==========================================
-FROM python:3.11-slim AS builder
+FROM python:3.14-slim AS builder
 
 # Copiar uv directamente desde su imagen oficial (ultrarrápido)
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -24,7 +24,7 @@ RUN uv sync --frozen --no-dev
 # ==========================================
 # Etapa 2: Runner
 # ==========================================
-FROM python:3.11-slim AS runner
+FROM python:3.14-slim AS runner
 
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1
@@ -41,4 +41,4 @@ COPY --chown=appuser:appuser src/ /app/src/
 USER appuser
 
 # Ejecutar la API
-CMD ["fastapi", "run", "src/sre_agent_metrics_api/main.py", "--port", "8000", "--host", "0.0.0.0"]
+CMD ["python", "-m", "uvicorn", "sre_agent_metrics_api.main:app", "--host", "0.0.0.0", "--port", "8000"]
