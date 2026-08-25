@@ -1,19 +1,12 @@
+import os
+
 import httpx
+from dotenv import load_dotenv
 from fastapi import BackgroundTasks, FastAPI
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings
 
-
-# 1. Definimos la clase de configuración
-class Settings(BaseSettings):
-    vm_write_url: str
-
-    class Config:
-        env_file = ".env"
-
-
-# Instanciamos la configuración (carga el .env automáticamente)
-settings = Settings()
+load_dotenv()
+VM_WRITE_URL = os.environ["VM_WRITE_URL"]
 
 app = FastAPI(title="SRE Agent Metrics API")
 
@@ -35,7 +28,7 @@ async def push_to_victoriametrics(metrics: SystemMetrics):
     async with httpx.AsyncClient() as client:
         try:
             # Carga URL del archivo .env y hace post
-            await client.post(settings.vm_write_url, content=line_data)
+            await client.post(VM_WRITE_URL, content=line_data)
         except httpx.RequestError as exc:
             print(f"Error enviando métricas: {exc}")
 
