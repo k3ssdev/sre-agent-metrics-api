@@ -6,8 +6,10 @@ FROM python:3.14-slim AS builder
 # Copiar uv directamente desde su imagen oficial (ultrarrápido)
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
+# ¡AQUÍ ESTÁ LA CLAVE! Añadir UV_LINK_MODE=copy
 ENV UV_PROJECT_ENVIRONMENT=/app/.venv \
-    UV_COMPILE_BYTECODE=1
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
 
 WORKDIR /app
 
