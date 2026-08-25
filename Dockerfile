@@ -12,7 +12,7 @@ ENV UV_PROJECT_ENVIRONMENT=/app/.venv \
 WORKDIR /app
 
 # Copiar dependencias primero para optimizar la caché de Docker
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 
 # Instalar dependencias de producción (sin compilar el código fuente todavía)
 RUN uv sync --frozen --no-install-project --no-dev
