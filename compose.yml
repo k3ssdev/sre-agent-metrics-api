@@ -1,0 +1,23 @@
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:latest
+    container_name: victoriametrics
+    ports:
+      - "8428:8428"
+    command:
+      - "-retentionPeriod=1y"
+    volumes:
+      - vmdata:/victoria-metrics-data
+
+  sre-agent-metrics-api:
+    container_name: sre-api
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - victoriametrics
+    env_file:
+      - .env
+
+volumes:
+  vmdata:
